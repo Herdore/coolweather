@@ -41,27 +41,27 @@ public class ChooseAreaActivity extends Activity {
 	private CoolWeatherDB coolWeatherDB;
 	private List<String> dataList = new ArrayList<String>();
 	/**
-	 * 
+	 * 省列表
 	 */
 	private List<Province> provinceList;
 	/**
-	 * 
+	 * 市列表
 	 */
 	private List<City> cityList;
 	/**
-	 * 
+	 * 县列表
 	 */
 	private List<County> countyList;
 	/**
-	 * 
+	 * 选中的省份
 	 */
 	private Province selectedProvince;
 	/**
-	 * 
+	 * 选中的城市
 	 */
 	private City selectedCity;
 	/**
-	 * 
+	 * 当前选中的级别
 	 */
 	private int currentLevel;
 	
@@ -87,11 +87,11 @@ public class ChooseAreaActivity extends Activity {
 				}
 			}
 		});
-		queryProvinces();//
+		queryProvinces();//加载省级数据
 	}
 	
 	/**
-	 * 
+	 * 查询全国所有的省，优先从数据库查询，如果没有查询到再去服务器上查询。
 	 */
 	private void queryProvinces() {
 		provinceList = coolWeatherDB.loadProvinces();
@@ -110,7 +110,7 @@ public class ChooseAreaActivity extends Activity {
 	} 
 	
 	/**
-	 * 
+	 * 查询选中省内所有的市，优先从数据库查询，如果没有查询到再去服务器上查询。
 	 */
 	private void queryCities() {
 		cityList = coolWeatherDB.loadCities(selectedProvince.getId());
@@ -129,7 +129,7 @@ public class ChooseAreaActivity extends Activity {
 	} 
 	
 	/**
-	 * 
+	 * 查询选中市内所有的县，优先从数据库查询，如果没有查询到再去服务器上查询。
 	 */
 	private void queryCounties() {
 		countyList = coolWeatherDB.loadCounties(selectedCity.getId());
@@ -148,7 +148,7 @@ public class ChooseAreaActivity extends Activity {
 	} 
 	
 	/**
-	 * 
+	 * 根据传入的代号和类型从服务器上查询省市县数据。
 	 */
 	private void queryFromServer(final String code, final String type) {
 		String address;
@@ -170,7 +170,7 @@ public class ChooseAreaActivity extends Activity {
 					result = Utility.handleCountiesResponse(coolWeatherDB, response,selectedCity.getId());
 				}
 				if (result) {
-					//
+					//通过runOnUiThread()方法回到主线程处理逻辑
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -189,7 +189,7 @@ public class ChooseAreaActivity extends Activity {
 			
 			@Override
 			public void onError(Exception e) {
-				//
+				//通过runOnUiThread()方法回到主线程处理逻辑
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -202,7 +202,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 	
 	/**
-	 * 
+	 * 显示进度对话框
 	 */
 	private void showProgressDialog() {
 		if (progressDialog == null) {
@@ -214,7 +214,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 	
 	/**
-	 * 
+	 * 关闭进度对话框
 	 */
 	private void closeProgressDialog() {
 		if (progressDialog != null) {
@@ -223,7 +223,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 	
 	/**
-	 * 
+	 * 捕获Back按键,按照当前的级别来判断，此时应该返回市列表、省列表、还是直接退出
 	 */
 	
 	@Override
